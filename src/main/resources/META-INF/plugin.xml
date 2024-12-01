@@ -1,0 +1,47 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.github.tobhor.jenkins-pipeline-linter-idea</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Jenkins Pipeline Linter</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description>Plugin für das Linten von Jenkins Pipelines</description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable instance="com.github.tobhor.jenkins.linter.settings.JenkinsLinterConfigurable"
+                                 groupId="tools"
+                                 groupWeight="130" displayName="Jenkins Linter"/>
+        <applicationService
+                serviceImplementation="com.github.tobhor.jenkins.linter.settings.JenkinsLinterState"/>
+
+        <toolWindow id="Jenkins Linter" anchor="bottom"
+                    factoryClass="com.github.tobhor.jenkins.linter.JenkinsLinterToolWindowFactory"
+                    icon="/icons/jenkins13.svg"/>
+    </extensions>
+
+    <actions>
+        <action id="com.github.tobhor.jenkins.linter.PerformJenkinsLinterAction"
+                class="com.github.tobhor.jenkins.linter.PerformJenkinsLinterAction"
+                text="Validate by Jenkins Linter"
+                description="Validate by jenkins linter" icon="/icons/jenkins13.svg">
+            <keyboard-shortcut first-keystroke="alt L" keymap="$default"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+
+</idea-plugin>
