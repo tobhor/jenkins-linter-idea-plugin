@@ -63,16 +63,17 @@ class JenkinsLinterComponent {
         get() = passwordTextField.password
 
     init {
-        panel = FormBuilder.createFormBuilder()
-            .addLabeledComponent(JBLabel("Jenkins url (protocol://hostname:port):"), jenkinsUrlTextField, 1, false)
-            .addLabeledComponent(JBLabel("Trust self-signed:"), trustSelfSignedCheckbox, 1, false)
-            .addLabeledComponent(JBLabel("Ignore certificate:"), ignoreCertificateCheckbox, 1, false)
-            .addLabeledComponent(JBLabel("Username:"), usernameTextField, 1, false)
-            .addLabeledComponent(JBLabel("Password/Token:"), passwordTextField, 1, false)
-            .addLabeledComponent(JBLabel("Use crumb issuer:"), useCrumbIssuerCheckbox, 1, false)
-            .addComponent(verifyButton, 1)
-            .addComponentFillVertically(JPanel(), 0)
-            .panel
+        panel =
+            FormBuilder.createFormBuilder()
+                .addLabeledComponent(JBLabel("Jenkins url (protocol://hostname:port):"), jenkinsUrlTextField, 1, false)
+                .addLabeledComponent(JBLabel("Trust self-signed:"), trustSelfSignedCheckbox, 1, false)
+                .addLabeledComponent(JBLabel("Ignore certificate:"), ignoreCertificateCheckbox, 1, false)
+                .addLabeledComponent(JBLabel("Username:"), usernameTextField, 1, false)
+                .addLabeledComponent(JBLabel("Password/Token:"), passwordTextField, 1, false)
+                .addLabeledComponent(JBLabel("Use crumb issuer:"), useCrumbIssuerCheckbox, 1, false)
+                .addComponent(verifyButton, 1)
+                .addComponentFillVertically(JPanel(), 0)
+                .panel
 
         verifyButton.addActionListener {
             checkConnection()
@@ -85,20 +86,23 @@ class JenkinsLinterComponent {
             Messages.showErrorDialog("Please provide Jenkins URL", "Jenkins Linter Configuration")
             return
         }
-        val test = JenkinsCheckConnectionTask(
-            jenkinsUrlTextField.text,
-            trustSelfSignedCheckbox.isSelected, ignoreCertificateCheckbox.isSelected, credentials
-        )
+        val test =
+            JenkinsCheckConnectionTask(
+                jenkinsUrlTextField.text,
+                trustSelfSignedCheckbox.isSelected,
+                ignoreCertificateCheckbox.isSelected,
+                credentials,
+            )
         ProgressManager.getInstance().run(test)
         if (test.success) {
             Messages.showInfoMessage(
                 "Successfully connected!",
-                "Jenkins Linter Configuration"
+                "Jenkins Linter Configuration",
             )
         } else {
             Messages.showErrorDialog(
                 "Failed to connect to the server. Please check the configuration.",
-                "Jenkins Linter Configuration"
+                "Jenkins Linter Configuration",
             )
         }
     }

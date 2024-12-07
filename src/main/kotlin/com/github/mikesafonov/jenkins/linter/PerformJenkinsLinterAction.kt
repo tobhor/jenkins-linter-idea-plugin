@@ -18,7 +18,6 @@ import com.intellij.openapi.wm.ToolWindow
  * @author Mike Safonov
  */
 class PerformJenkinsLinterAction : AnAction() {
-
     private val reader = FileContentReader()
 
     override fun actionPerformed(event: AnActionEvent) {
@@ -33,34 +32,36 @@ class PerformJenkinsLinterAction : AnAction() {
             val panel = JenkinsLinterToolWindowFactory.getPanel(project)
             if (settings.jenkinsUrl.isBlank()) {
                 panel.setText(
-                    "Please configure Jenkins instance under Settings | Tools | Jenkins Linter"
+                    "Please configure Jenkins instance under Settings | Tools | Jenkins Linter",
                 )
             } else {
                 ProgressManager.getInstance()
-                    .run(object : Backgroundable(project, "Linting ${fileContent.name} ...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val linterResponse = doLint(fileContent.content, settings)
-                            ApplicationManager.getApplication().invokeLaterOnWriteThread {
-                                when (linterResponse.code) {
-                                    HttpCodes.FORBIDDEN -> {
-                                        panel.setText(
-                                            """
-                                    Forbidden. Please configure Jenkins instance under Settings | Tools | Jenkins Linter
-                                            """.trimIndent()
-                                        )
-                                    }
-                                    HttpCodes.SUCCESS -> {
-                                        handleSuccess(linterResponse, panel, event)
-                                    }
-                                    else -> {
-                                        val mess = linterResponse.message
-                                        val code = linterResponse.code
-                                        panel.setText("HTTP response status code: $code, message: $mess")
+                    .run(
+                        object : Backgroundable(project, "Linting ${fileContent.name} ...", false) {
+                            override fun run(indicator: ProgressIndicator) {
+                                val linterResponse = doLint(fileContent.content, settings)
+                                ApplicationManager.getApplication().invokeLaterOnWriteThread {
+                                    when (linterResponse.code) {
+                                        HttpCodes.FORBIDDEN -> {
+                                            panel.setText(
+                                                """
+                                                Forbidden. Please configure Jenkins instance under Settings | Tools | Jenkins Linter
+                                                """.trimIndent(),
+                                            )
+                                        }
+                                        HttpCodes.SUCCESS -> {
+                                            handleSuccess(linterResponse, panel, event)
+                                        }
+                                        else -> {
+                                            val mess = linterResponse.message
+                                            val code = linterResponse.code
+                                            panel.setText("HTTP response status code: $code, message: $mess")
+                                        }
                                     }
                                 }
                             }
-                        }
-                    })
+                        },
+                    )
             }
         }
     }
@@ -68,7 +69,7 @@ class PerformJenkinsLinterAction : AnAction() {
     private fun handleSuccess(
         linterResponse: LinterResponse,
         panel: LinterResponsePanel,
-        event: AnActionEvent
+        event: AnActionEvent,
     ) {
         if (linterResponse.successValidated) {
             panel.setText(linterResponse.message)
@@ -88,11 +89,17 @@ class PerformJenkinsLinterAction : AnAction() {
         e.presentation.isEnabledAndVisible = virtualFile != null && !virtualFile.isDirectory
     }
 
-    private fun doLint(content: String, settings: JenkinsLinterState): LinterResponse {
-        val linter = JenkinsServerFactory.get(
-            settings.jenkinsUrl, settings.trustSelfSigned, settings.ignoreCertificate,
-            settings.useCrumbIssuer
-        )
+    private fun doLint(
+        content: String,
+        settings: JenkinsLinterState,
+    ): LinterResponse {
+        val linter =
+            JenkinsServerFactory.get(
+                settings.jenkinsUrl,
+                settings.trustSelfSigned,
+                settings.ignoreCertificate,
+                settings.useCrumbIssuer,
+            )
         linter.use {
             val linterResponse = it.lint(content)
             Logger.getInstance(PerformJenkinsLinterAction::class.java).debug(linterResponse.message)

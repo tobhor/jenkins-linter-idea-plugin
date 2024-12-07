@@ -14,10 +14,9 @@ class JenkinsCheckConnectionTask(
     private val jenkinsUrl: String,
     private val trustSelfSigned: Boolean,
     private val ignoreCertificate: Boolean,
-    private val credentials: Credentials?
+    private val credentials: Credentials?,
 ) :
     Task.Modal(null, "Test Connection to Jenkins", false) {
-
     var success: Boolean = false
 
     override fun run(indicator: ProgressIndicator) {

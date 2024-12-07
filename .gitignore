@@ -11,5 +11,9 @@ hs_err_pid*
 .gradle/
 *.iml
 
+.intellijPlatform/
+
+.kotlin/
+
 build/
 

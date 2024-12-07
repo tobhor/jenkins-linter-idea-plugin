@@ -16,7 +16,6 @@ import java.awt.event.MouseEvent
  */
 
 class LinterResponsePanel(val mover: ToSourceMover) : JBPanelWithEmptyText() {
-
     init {
         this.layout = BorderLayout()
     }
@@ -52,7 +51,7 @@ class LinterResponsePanel(val mover: ToSourceMover) : JBPanelWithEmptyText() {
                     val selected = list.selectedValue
                     mover.move(selected)
                 }
-            }
+            },
         )
         return list
     }

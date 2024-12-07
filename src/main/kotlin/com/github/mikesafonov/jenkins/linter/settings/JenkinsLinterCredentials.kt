@@ -14,7 +14,10 @@ object JenkinsLinterCredentials {
         return PasswordSafe.instance.get(attributes)
     }
 
-    fun store(username: String, password: CharArray) {
+    fun store(
+        username: String,
+        password: CharArray,
+    ) {
         val credentials = Credentials(username, password)
         store(credentials)
     }
@@ -24,10 +27,11 @@ object JenkinsLinterCredentials {
         PasswordSafe.instance.set(attributes, credentials)
     }
 
-    private fun credentialAttributes() = CredentialAttributes(
-        generateServiceName(
-            "Jenkins linter",
-            "jenkins instance"
+    private fun credentialAttributes() =
+        CredentialAttributes(
+            generateServiceName(
+                "Jenkins linter",
+                "jenkins instance",
+            ),
         )
-    )
 }

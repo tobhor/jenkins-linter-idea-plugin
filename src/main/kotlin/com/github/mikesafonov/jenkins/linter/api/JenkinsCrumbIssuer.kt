@@ -16,9 +16,8 @@ import java.nio.charset.StandardCharsets
  */
 class JenkinsCrumbIssuer(
     private val url: String,
-    private val client: HttpClient
+    private val client: HttpClient,
 ) {
-
     fun get(): JenkinsCrumb {
         val response = execute("$url/crumbIssuer/api/json")
         if (response.statusLine.statusCode == HttpCodes.SUCCESS) {
@@ -26,7 +25,8 @@ class JenkinsCrumbIssuer(
         } else {
             val code = response.statusLine.statusCode
             throw JenkinsLinterException(
-                "Unable to get crumb. Reason: ${response.statusLine.reasonPhrase}", code
+                "Unable to get crumb. Reason: ${response.statusLine.reasonPhrase}",
+                code,
             )
         }
     }

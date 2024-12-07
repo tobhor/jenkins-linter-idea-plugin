@@ -8,7 +8,6 @@ import java.io.Closeable
  * @author Mike Safonov
  */
 interface JenkinsServer : Closeable {
-
     fun checkConnection(): JenkinsResponse
 
     fun lint(content: String): LinterResponse

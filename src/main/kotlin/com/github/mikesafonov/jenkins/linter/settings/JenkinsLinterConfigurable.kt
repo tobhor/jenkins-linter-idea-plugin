@@ -19,10 +19,11 @@ class JenkinsLinterConfigurable : SearchableConfigurable {
 
     override fun isModified(): Boolean {
         val settings = getSettings()
-        val modified = settings.jenkinsUrl != component.jenkinsUrl ||
-            settings.trustSelfSigned != component.trustSelfSigned ||
-            settings.ignoreCertificate != component.ignoreCertificate ||
-            settings.useCrumbIssuer != component.useCrumbIssuer
+        val modified =
+            settings.jenkinsUrl != component.jenkinsUrl ||
+                settings.trustSelfSigned != component.trustSelfSigned ||
+                settings.ignoreCertificate != component.ignoreCertificate ||
+                settings.useCrumbIssuer != component.useCrumbIssuer
 
         if (modified) {
             return true
@@ -39,9 +40,12 @@ class JenkinsLinterConfigurable : SearchableConfigurable {
     override fun apply() {
         val settings = getSettings()
         val jenkinsUrl = component.jenkinsUrl
-        settings.jenkinsUrl = if (jenkinsUrl.endsWith("/")) {
-            jenkinsUrl.substring(0, jenkinsUrl.length - 1)
-        } else jenkinsUrl
+        settings.jenkinsUrl =
+            if (jenkinsUrl.endsWith("/")) {
+                jenkinsUrl.substring(0, jenkinsUrl.length - 1)
+            } else {
+                jenkinsUrl
+            }
 
         settings.trustSelfSigned = component.trustSelfSigned
         settings.ignoreCertificate = component.ignoreCertificate

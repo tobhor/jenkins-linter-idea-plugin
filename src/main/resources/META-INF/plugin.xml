@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.mikesafonov.jenkins-linter-idea-plugin</id>
     <name>Jenkins Pipeline Linter</name>
-    <vendor email="msafonovmail@gmail.com" url="https://github.com/MikeSafonov">Mike Safonov</vendor>
+    <vendor email="programmierungth@gmx.de" url="https://github.com/TobiasHorst">Tobias Horst</vendor>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -14,7 +14,8 @@
         <applicationService
                 serviceImplementation="com.github.mikesafonov.jenkins.linter.settings.JenkinsLinterState"/>
 
-        <toolWindow id="Jenkins Linter" anchor="bottom" factoryClass="com.github.mikesafonov.jenkins.linter.JenkinsLinterToolWindowFactory"
+        <toolWindow id="Jenkins Linter" anchor="bottom"
+                    factoryClass="com.github.mikesafonov.jenkins.linter.JenkinsLinterToolWindowFactory"
                     icon="/icons/jenkins13.svg"/>
     </extensions>
 

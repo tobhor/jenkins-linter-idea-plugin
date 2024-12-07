@@ -12,7 +12,6 @@ import com.intellij.openapi.wm.ToolWindowType
  */
 
 class JenkinsLinterToolWindowFactory : ToolWindowFactory {
-
     companion object {
         fun getLinterToolWindow(project: Project): ToolWindow {
             return ToolWindowManager.getInstance(project).getToolWindow("Jenkins Linter")!!
@@ -24,13 +23,17 @@ class JenkinsLinterToolWindowFactory : ToolWindowFactory {
         }
     }
 
-    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+    override fun createToolWindowContent(
+        project: Project,
+        toolWindow: ToolWindow,
+    ) {
         val mover = ToSourceMover(project)
-        val createContent = toolWindow.contentManager.factory.createContent(
-            LinterResponsePanel(mover),
-            "Jenkins Linter",
-            false
-        )
+        val createContent =
+            toolWindow.contentManager.factory.createContent(
+                LinterResponsePanel(mover),
+                "Jenkins Linter",
+                false,
+            )
         toolWindow.contentManager.addContent(createContent)
         toolWindow.title = "Jenkins Linter"
         toolWindow.setType(ToolWindowType.DOCKED, null)

@@ -20,16 +20,20 @@ class JenkinsServerImpl(
     trustSelfSigned: Boolean = true,
     ignoreCertificate: Boolean = false,
     credentials: Credentials? = null,
-    private val useCrumbIssuer: Boolean = false
+    private val useCrumbIssuer: Boolean = false,
 ) : JenkinsServer {
-    private val httpClient: CloseableHttpClient = HttpClientFactory.get(
-        url, trustSelfSigned,
-        ignoreCertificate, credentials
-    )
-    private val crumbIssuer = JenkinsCrumbIssuer(
-        url,
-        httpClient
-    )
+    private val httpClient: CloseableHttpClient =
+        HttpClientFactory.get(
+            url,
+            trustSelfSigned,
+            ignoreCertificate,
+            credentials,
+        )
+    private val crumbIssuer =
+        JenkinsCrumbIssuer(
+            url,
+            httpClient,
+        )
 
     override fun checkConnection(): JenkinsResponse {
         return httpClient.execute(HttpGet(url)).use {
@@ -63,9 +67,10 @@ class JenkinsServerImpl(
             postMethod.addHeader(crumb.crumbRequestField, crumb.crumb)
         }
 
-        postMethod.entity = MultipartEntityBuilder.create()
-            .addTextBody("jenkinsfile", fileContent)
-            .build()
+        postMethod.entity =
+            MultipartEntityBuilder.create()
+                .addTextBody("jenkinsfile", fileContent)
+                .build()
         return postMethod
     }
 }

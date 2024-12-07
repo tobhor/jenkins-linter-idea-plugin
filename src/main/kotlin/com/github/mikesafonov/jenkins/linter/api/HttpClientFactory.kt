@@ -22,12 +22,11 @@ import javax.net.ssl.SSLContext
  * @author Mike Safonov
  */
 object HttpClientFactory {
-
     fun get(
         url: String,
         trustSelfSigned: Boolean,
         ignoreCertificate: Boolean,
-        credentials: Credentials?
+        credentials: Credentials?,
     ): CloseableHttpClient {
         val clientBuilder = HttpClients.custom()
 
@@ -41,10 +40,11 @@ object HttpClientFactory {
             .setDefaultRequestConfig(requestConfig.build())
             .setDefaultCredentialsProvider(provider)
         if (ignoreCertificate) {
-            val sslContext: SSLContext = SSLContextBuilder()
-                .loadTrustMaterial(
-                    null
-                ) { _: Array<X509Certificate?>?, _: String? -> true }.build()
+            val sslContext: SSLContext =
+                SSLContextBuilder()
+                    .loadTrustMaterial(
+                        null,
+                    ) { _: Array<X509Certificate?>?, _: String? -> true }.build()
             clientBuilder
                 .setSSLContext(sslContext)
                 .setSSLHostnameVerifier(NoopHostnameVerifier())
@@ -56,18 +56,19 @@ object HttpClientFactory {
                 val builder = SSLContextBuilder()
                 builder.loadTrustMaterial(TrustSelfSignedStrategy())
                 clientBuilder.setSSLSocketFactory(
-                    SSLConnectionSocketFactory(builder.build())
+                    SSLConnectionSocketFactory(builder.build()),
                 )
             }
         }
         if (credentials != null) {
             val auth = "${credentials.userName!!}:${credentials.getPasswordAsString()}"
-            val encodedAuth: ByteArray = encodeBase64(
-                auth.toByteArray(StandardCharsets.ISO_8859_1)
-            )
+            val encodedAuth: ByteArray =
+                encodeBase64(
+                    auth.toByteArray(StandardCharsets.ISO_8859_1),
+                )
             val authHeader = "Basic ${String(encodedAuth)}"
             clientBuilder.setDefaultHeaders(
-                listOf(BasicHeader(HttpHeaders.AUTHORIZATION, authHeader))
+                listOf(BasicHeader(HttpHeaders.AUTHORIZATION, authHeader)),
             )
         }
         return clientBuilder.build()
