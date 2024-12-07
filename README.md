@@ -14,7 +14,7 @@ This plugin is a fork of https://github.com/MikeSafonov/jenkins-linter-idea-plug
 - [x] HTTP linter integration
 - [x] Linting errors highlighting
 - [x] Jenkins authorization
-- [x] Jenkins authorization via OAuth
+- [x] OAuth support
 
 ## Installation
 
@@ -37,6 +37,11 @@ Settings for the plugin can be found under **Settings | Tools | Jenkins Linter**
 
 Starting from `0.5.0` plugin support builtin proxy (**File | Settings | Appearance & Behavior | System Settings | HTTP
 Proxy**) and SSL(**File | Settings | Tools | Server Certificates**) settings.
+
+## OAuth Support
+
+For Jenkins instances secured by an OAuth provider just check the "Use OAuth Token" option and provide the token via the
+password/token field.
 
 ## Contributing
 

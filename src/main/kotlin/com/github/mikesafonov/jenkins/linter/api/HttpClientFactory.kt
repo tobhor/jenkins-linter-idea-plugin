@@ -20,6 +20,7 @@ import javax.net.ssl.SSLContext
 
 /**
  * @author Mike Safonov
+ * @author Tobias Horst
  */
 object HttpClientFactory {
     fun get(
@@ -27,6 +28,7 @@ object HttpClientFactory {
         trustSelfSigned: Boolean,
         ignoreCertificate: Boolean,
         credentials: Credentials?,
+        useTokenAsOAuthToken: Boolean,
     ): CloseableHttpClient {
         val clientBuilder = HttpClients.custom()
 
@@ -61,15 +63,22 @@ object HttpClientFactory {
             }
         }
         if (credentials != null) {
-            val auth = "${credentials.userName!!}:${credentials.getPasswordAsString()}"
-            val encodedAuth: ByteArray =
-                encodeBase64(
-                    auth.toByteArray(StandardCharsets.ISO_8859_1),
+            if (useTokenAsOAuthToken) {
+                val authHeader = "Bearer ${credentials.getPasswordAsString()}"
+                clientBuilder.setDefaultHeaders(
+                    listOf(BasicHeader(HttpHeaders.AUTHORIZATION, authHeader)),
                 )
-            val authHeader = "Basic ${String(encodedAuth)}"
-            clientBuilder.setDefaultHeaders(
-                listOf(BasicHeader(HttpHeaders.AUTHORIZATION, authHeader)),
-            )
+            } else {
+                val auth = "${credentials.userName!!}:${credentials.getPasswordAsString()}"
+                val encodedAuth: ByteArray =
+                    encodeBase64(
+                        auth.toByteArray(StandardCharsets.ISO_8859_1),
+                    )
+                val authHeader = "Basic ${String(encodedAuth)}"
+                clientBuilder.setDefaultHeaders(
+                    listOf(BasicHeader(HttpHeaders.AUTHORIZATION, authHeader)),
+                )
+            }
         }
         return clientBuilder.build()
     }

@@ -7,19 +7,12 @@ import com.intellij.ide.passwordSafe.PasswordSafe
 
 /**
  * @author Mike Safonov
+ * @author Tobias Horst
  */
 object JenkinsLinterCredentials {
     fun get(): Credentials? {
         val attributes = credentialAttributes()
         return PasswordSafe.instance.get(attributes)
-    }
-
-    fun store(
-        username: String,
-        password: CharArray,
-    ) {
-        val credentials = Credentials(username, password)
-        store(credentials)
     }
 
     fun store(credentials: Credentials) {

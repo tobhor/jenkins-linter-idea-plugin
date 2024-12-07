@@ -14,12 +14,14 @@ import java.nio.charset.StandardCharsets
 
 /**
  * @author Mike Safonov
+ * @author Tobias Horst
  */
 class JenkinsServerImpl(
     private val url: String,
     trustSelfSigned: Boolean = true,
     ignoreCertificate: Boolean = false,
     credentials: Credentials? = null,
+    useTokenAsOAuthToken: Boolean = false,
     private val useCrumbIssuer: Boolean = false,
 ) : JenkinsServer {
     private val httpClient: CloseableHttpClient =
@@ -28,6 +30,7 @@ class JenkinsServerImpl(
             trustSelfSigned,
             ignoreCertificate,
             credentials,
+            useTokenAsOAuthToken,
         )
     private val crumbIssuer =
         JenkinsCrumbIssuer(

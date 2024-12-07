@@ -5,6 +5,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.FormBuilder
+import java.awt.event.ItemEvent
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JPanel
@@ -13,6 +14,7 @@ import javax.swing.JTextField
 
 /**
  * @author Mike Safonov
+ * @author Tobias Horst
  */
 class JenkinsLinterComponent {
     val panel: JPanel
@@ -20,6 +22,7 @@ class JenkinsLinterComponent {
     private var trustSelfSignedCheckbox: JCheckBox = JCheckBox()
     private var ignoreCertificateCheckbox: JCheckBox = JCheckBox()
     private var verifyButton = JButton("Check connection")
+    private var useTokenAsOAuthTokenCheckbox: JCheckBox = JCheckBox()
     private var usernameTextField: JTextField = JTextField()
     private var passwordTextField: JPasswordField = JPasswordField()
     private var useCrumbIssuerCheckbox: JCheckBox = JCheckBox()
@@ -38,6 +41,11 @@ class JenkinsLinterComponent {
         get() = ignoreCertificateCheckbox.isSelected
         set(value) {
             ignoreCertificateCheckbox.isSelected = value
+        }
+    var useTokenAsOAuthToken: Boolean
+        get() = useTokenAsOAuthTokenCheckbox.isSelected
+        set(value) {
+            useTokenAsOAuthTokenCheckbox.isSelected = value
         }
     var useCrumbIssuer: Boolean
         get() = useCrumbIssuerCheckbox.isSelected
@@ -68,6 +76,7 @@ class JenkinsLinterComponent {
                 .addLabeledComponent(JBLabel("Jenkins url (protocol://hostname:port):"), jenkinsUrlTextField, 1, false)
                 .addLabeledComponent(JBLabel("Trust self-signed:"), trustSelfSignedCheckbox, 1, false)
                 .addLabeledComponent(JBLabel("Ignore certificate:"), ignoreCertificateCheckbox, 1, false)
+                .addLabeledComponent(JBLabel("Use OAuth token:"), useTokenAsOAuthTokenCheckbox, 1, false)
                 .addLabeledComponent(JBLabel("Username:"), usernameTextField, 1, false)
                 .addLabeledComponent(JBLabel("Password/Token:"), passwordTextField, 1, false)
                 .addLabeledComponent(JBLabel("Use crumb issuer:"), useCrumbIssuerCheckbox, 1, false)
@@ -77,6 +86,10 @@ class JenkinsLinterComponent {
 
         verifyButton.addActionListener {
             checkConnection()
+        }
+        useTokenAsOAuthTokenCheckbox.addItemListener { e ->
+            val enabled = e.stateChange != ItemEvent.SELECTED
+            usernameTextField.isEnabled = enabled
         }
     }
 
@@ -92,6 +105,7 @@ class JenkinsLinterComponent {
                 trustSelfSignedCheckbox.isSelected,
                 ignoreCertificateCheckbox.isSelected,
                 credentials,
+                useTokenAsOAuthToken,
             )
         ProgressManager.getInstance().run(test)
         if (test.success) {

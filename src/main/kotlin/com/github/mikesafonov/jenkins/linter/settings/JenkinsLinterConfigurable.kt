@@ -8,6 +8,7 @@ import javax.swing.JComponent
 
 /**
  * @author Mike Safonov
+ * @author Tobias Horst
  */
 class JenkinsLinterConfigurable : SearchableConfigurable {
     private val component: JenkinsLinterComponent = JenkinsLinterComponent()
@@ -23,7 +24,8 @@ class JenkinsLinterConfigurable : SearchableConfigurable {
             settings.jenkinsUrl != component.jenkinsUrl ||
                 settings.trustSelfSigned != component.trustSelfSigned ||
                 settings.ignoreCertificate != component.ignoreCertificate ||
-                settings.useCrumbIssuer != component.useCrumbIssuer
+                settings.useCrumbIssuer != component.useCrumbIssuer ||
+                settings.useTokenAsOAuthToken != component.useTokenAsOAuthToken
 
         if (modified) {
             return true
@@ -50,6 +52,7 @@ class JenkinsLinterConfigurable : SearchableConfigurable {
         settings.trustSelfSigned = component.trustSelfSigned
         settings.ignoreCertificate = component.ignoreCertificate
         settings.useCrumbIssuer = component.useCrumbIssuer
+        settings.useTokenAsOAuthToken = component.useTokenAsOAuthToken
 
         val credentials = component.credentials
         if (credentials != null) {
@@ -73,6 +76,7 @@ class JenkinsLinterConfigurable : SearchableConfigurable {
         component.trustSelfSigned = settings.trustSelfSigned
         component.ignoreCertificate = settings.ignoreCertificate
         component.useCrumbIssuer = settings.useCrumbIssuer
+        component.useTokenAsOAuthToken = settings.useTokenAsOAuthToken
         component.credentials = JenkinsLinterCredentials.get()
     }
 

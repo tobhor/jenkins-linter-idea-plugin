@@ -4,6 +4,7 @@ import com.github.mikesafonov.jenkins.linter.api.JenkinsLintResponseParser
 import com.github.mikesafonov.jenkins.linter.api.JenkinsServerFactory
 import com.github.mikesafonov.jenkins.linter.settings.JenkinsLinterState
 import com.github.mikesafonov.jenkins.linter.ui.LinterResponsePanel
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -16,6 +17,7 @@ import com.intellij.openapi.wm.ToolWindow
 
 /**
  * @author Mike Safonov
+ * @author Tobias Horst
  */
 class PerformJenkinsLinterAction : AnAction() {
     private val reader = FileContentReader()
@@ -49,9 +51,11 @@ class PerformJenkinsLinterAction : AnAction() {
                                                 """.trimIndent(),
                                             )
                                         }
+
                                         HttpCodes.SUCCESS -> {
                                             handleSuccess(linterResponse, panel, event)
                                         }
+
                                         else -> {
                                             val mess = linterResponse.message
                                             val code = linterResponse.code
@@ -87,6 +91,10 @@ class PerformJenkinsLinterAction : AnAction() {
     override fun update(e: AnActionEvent) {
         val virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE)
         e.presentation.isEnabledAndVisible = virtualFile != null && !virtualFile.isDirectory
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
     }
 
     private fun doLint(
